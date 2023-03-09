@@ -1,0 +1,67 @@
+# Service Account
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: tutorial-service-account
+  namespace: default
+secrets:
+- name: tutorial-registry-credentials
+imagePullSecrets:
+- name: tutorial-registry-credentials
+---
+# Cluster Store
+apiVersion: kpack.io/v1alpha2
+kind: ClusterStore
+metadata:
+  name: default
+spec:
+  sources:
+  - image: gcr.io/paketo-buildpacks/java
+---
+# Cluster Stack
+apiVersion: kpack.io/v1alpha2
+kind: ClusterStack
+metadata:
+  name: base
+spec:
+  id: "io.buildpacks.stacks.bionic"
+  buildImage:
+    image: "paketobuildpacks/build:base-cnb"
+  runImage:
+    image: "paketobuildpacks/run:base-cnb"
+---
+# Builder
+apiVersion: kpack.io/v1alpha2
+kind: Builder
+metadata:
+  name: my-builder
+  namespace: default
+spec:
+  serviceAccountName: tutorial-service-account
+  tag: yoanyo/buildpack
+  stack:
+    name: base
+    kind: ClusterStack
+  store:
+    name: default
+    kind: ClusterStore
+  order:
+  - group:
+    - id: paketo-buildpacks/java
+---
+# Image
+apiVersion: kpack.io/v1alpha2
+kind: Image
+metadata:
+  name: tutorial-image
+  namespace: default
+spec:
+  tag: yoanyo/hello-world
+  serviceAccountName: tutorial-service-account
+  builder:
+    name: my-builder
+    kind: Builder
+  source:
+    git:
+      url: https://github.com/juanjmerono/hello-world
+      revision: main
