@@ -46,6 +46,26 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+                	<image>
+						<name>yoanyo/hello-world2:latest</name>
+                    	<!--builder>yoanyo/buildpack2</builder-->
+						<buildpacks>
+							<buildpack>gcr.io/paketo-buildpacks/ca-certificates:latest</buildpack>
+                        	<buildpack>gcr.io/paketo-buildpacks/amazon-corretto:latest</buildpack>
+							<buildpack>gcr.io/paketo-buildpacks/syft:latest</buildpack>
+                        	<buildpack>gcr.io/paketo-buildpacks/executable-jar:latest</buildpack>
+                        	<buildpack>gcr.io/paketo-buildpacks/spring-boot:latest</buildpack>
+                		</buildpacks>
+						<bindings>
+                			<binding>${basedir}/bindings/ca-certificates:/platform/bindings/ca-certificates</binding>
+            			</bindings>
+                		<env>
+                        	<BP_JVM_VERSION>11</BP_JVM_VERSION>
+							<BP_EMBED_CERTS>true</BP_EMBED_CERTS>
+                		</env>						
+                	</image>
+        		</configuration>
 				<executions>
 					<execution>
 						<goals>
