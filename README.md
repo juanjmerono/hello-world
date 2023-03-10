@@ -35,5 +35,9 @@ kubectl apply -f kpack/k8s-deployment.yaml
 kubectl get pods
 
 kubectl port-forward svc/my-spring-app-service 8080:80
+kubectl port-forward svc/my-spring-app-service2 9090:80
 
 # Update Source
+
+kubectl rollout restart deployment my-spring-app
+kubectl rollout restart deployment my-spring-app2
