@@ -1,0 +1,73 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>SpringBoot BuildPack Inspector</title>
+    <style>
+        p { font-weight: bold; }
+        dt { display: inline; font-weight: bold; }
+        dl,dd { display: inline; font-size: 0.9rem; }
+        dt:before { content: ""; display: block; }
+    </style>
+</head>
+<body>
+<h1 th:text=${title}></h1>
+<h3 id="hour"></h3>
+<p id="spversion"></p>
+<p id="svversion"></p>
+<div>
+    <p>Build Info</p>
+    <dl id="builddata"></dl>
+</div>
+<div>
+    <p>Java Info</p>
+    <dl id="javadata"></dl>
+</div>
+<div>
+    <p>OS Info</p>
+    <dl id="osdata"></dl>
+</div>
+
+<script>
+
+    function showData(obj,name) {
+        let main = document.getElementById(name);
+        Object.entries(obj).forEach(p=>{
+            let dtElement = document.createElement('dt');
+            dtElement.innerHTML = p[0];
+            main.appendChild(dtElement);
+            let ddElement = document.createElement('dd');
+            if (p[1].hasOwnProperty('name')) {
+                ddElement.innerHTML = p[1].name + ';' + p[1].version;
+            } else {
+                ddElement.innerHTML = p[1];
+            }
+            main.appendChild(ddElement);
+        });
+    }
+
+    fetch('/hora')
+        .then((resp) => resp.json())
+        .then(function(data) {
+            //console.log(data);
+            document.getElementById('hour').innerHTML = data.hour;
+        })
+        .catch(function(error) {
+            console.log(error);
+        });
+
+    fetch('/actuator/info')
+        .then((resp) => resp.json())
+        .then(function(data) {
+            console.log(data);
+            document.getElementById('spversion').innerHTML = 'SpringBoot Version: ' + data['spring-boot.version'];
+            document.getElementById('svversion').innerHTML = 'Tomcat Version: ' + data['tomcat.version'];
+            showData(data.build,'builddata');
+            showData(data.java,'javadata');
+            showData(data.os,'osdata');
+        })
+        .catch(function(error) {
+            console.log(error);
+        });
+
+</script>
+</body>
+</html>
