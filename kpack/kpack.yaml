@@ -199,3 +199,19 @@ spec:
     git:
       url: https://github.com/juanjmerono/hello-world
       revision: main
+---
+# Image
+apiVersion: kpack.io/v1alpha2
+kind: Image
+metadata:
+  name: tutorial-image3
+  namespace: default
+spec:
+  tag: yoanyo/hello-world3
+  serviceAccountName: tutorial-service-account
+  builder:
+    name: my-builder
+    kind: Builder
+  source:
+    registry:
+      image: yoanyo/hello-world-src:latest
