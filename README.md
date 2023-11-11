@@ -39,15 +39,20 @@ kubectl apply -f kpack/k8s-deployment.yaml
 kubectl get pods
 
 kubectl port-forward svc/my-spring-app-service 8080:80
-kubectl port-forward svc/my-spring-app-service2 9090:80
-kubectl port-forward svc/my-spring-app-service3 8888:80
+kubectl port-forward svc/my-spring-app-service2 8080:80
+kubectl port-forward svc/my-spring-app-service3 8080:80
 
 # Update Source
 
-You could change main branch repo source code or push another source code image to registry and then
+You could change main branch repo source code to launch another build
 
 kubectl rollout restart deployment my-spring-app
 kubectl rollout restart deployment my-spring-app2
+
+If you push another source code image to registry nothing happends
+
+kp image tutorial-image3 trigger
+
 kubectl rollout restart deployment my-spring-app3
 
 # Shutdown
