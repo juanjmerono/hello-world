@@ -1,0 +1,30 @@
+# Regular java image from source code
+# Image
+apiVersion: kpack.io/v1alpha2
+kind: Image
+metadata:
+  name: tutorial-image
+  namespace: default
+spec:
+  tag: yoanyo/hello-world
+  serviceAccountName: tutorial-service-account
+  builder:
+    name: java-builder
+    kind: Builder
+  source:
+    git:
+      url: https://github.com/juanjmerono/hello-world
+      revision: main
+  build:
+    env:
+      - name: BP_MAVEN_BUILD_ARGUMENTS
+        value: --batch-mode -Dtomcat.version=9.0.82 --no-transfer-progress package
+      - name: BP_JVM_VERSION
+        value: "17"      
+    # services:
+    #   - name: tutorial-certificates
+    #     kind: Secret
+    #     apiVersion: v1
+    #   - name: tutorial-settings
+    #     kind: Secret
+    #     apiVersion: v1

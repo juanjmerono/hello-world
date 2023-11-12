@@ -1,0 +1,43 @@
+# Cluster Store
+apiVersion: kpack.io/v1alpha2
+kind: ClusterStore
+metadata:
+  name: store-java
+spec:
+  sources:
+  - image: gcr.io/paketo-buildpacks/java
+---
+# Cluster Stack
+apiVersion: kpack.io/v1alpha2
+kind: ClusterStack
+metadata:
+  name: stack-java
+spec:
+  id: "io.buildpacks.stacks.jammy"
+  buildImage:
+    image: "paketobuildpacks/build-jammy-base"
+  runImage:
+    image: "paketobuildpacks/run-jammy-base"
+  # Download images from a private repo
+  # serviceAccountRef:
+  #   name: private
+  #   namespace: private
+---
+# Builder
+apiVersion: kpack.io/v1alpha2
+kind: Builder
+metadata:
+  name: java-builder
+  namespace: default
+spec:
+  serviceAccountName: tutorial-service-account
+  tag: yoanyo/bp-java-builder
+  stack:
+    name: stack-java
+    kind: ClusterStack
+  store:
+    name: store-java
+    kind: ClusterStore
+  order:
+  - group:
+    - id: paketo-buildpacks/java

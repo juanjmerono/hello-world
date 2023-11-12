@@ -1,0 +1,39 @@
+# Cluster Store
+apiVersion: kpack.io/v1alpha2
+kind: ClusterStore
+metadata:
+  name: store-java-native
+spec:
+  sources:
+  - image: gcr.io/paketo-buildpacks/java-native-image
+---
+# Cluster Stack
+apiVersion: kpack.io/v1alpha2
+kind: ClusterStack
+metadata:
+  name: stack-java-native
+spec:
+  id: "io.buildpacks.stacks.jammy.tiny"
+  buildImage:
+    image: "paketobuildpacks/build-jammy-tiny"
+  runImage:
+    image: "paketobuildpacks/run-jammy-tiny"
+---
+# Builder
+apiVersion: kpack.io/v1alpha2
+kind: Builder
+metadata:
+  name: java-native-builder
+  namespace: default
+spec:
+  serviceAccountName: tutorial-service-account
+  tag: yoanyo/bp-java-native-builder
+  stack:
+    name: stack-java-native
+    kind: ClusterStack
+  store:
+    name: store-java-native
+    kind: ClusterStore
+  order:
+  - group:
+    - id: paketo-buildpacks/java-native-image

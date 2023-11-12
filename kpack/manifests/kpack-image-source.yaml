@@ -1,0 +1,16 @@
+# Regular image from source inside a source image from scratch
+# Image
+apiVersion: kpack.io/v1alpha2
+kind: Image
+metadata:
+  name: tutorial-image-source
+  namespace: default
+spec:
+  tag: yoanyo/hello-world-source
+  serviceAccountName: tutorial-service-account
+  builder:
+    name: java-builder
+    kind: Builder
+  source:
+    registry:
+      image: yoanyo/hello-world-src:latest

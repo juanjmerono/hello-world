@@ -24,15 +24,24 @@ kubectl create secret docker-registry tutorial-registry-credentials \
 
 # Deploy KPack files
 
-kubectl apply -f kpack/kpack.yaml
+kubectl apply -f kpack/manifests/kpack-service-account.yaml
+kubectl apply -f kpack/manifests/kpack-java-builder.yaml
+kubectl apply -f kpack/manifests/kpack-java-native-builder.yaml
 
 kubectl get clusterstacks
 #kubectl get clusterbuilders
 kubectl get clusterstores
 kubectl get builders
+kubectl get pods -A
+
+# Deploy regular image
+
+kubectl apply -f kpack/manifests/kpack-image.yaml
+#kubectl apply -f kpack/manifests/kpack-image-native.yaml
+#kubectl apply -f kpack/manifests/kpack-image-source.yaml
+
 kubectl get builds
 kubectl get images
-kubectl get pods
 
 You can check lifecycle phases log
 
@@ -60,26 +69,35 @@ Inside targe/layers you can inspect details of jvm and all libs and vesions incl
 
 # Deploy Service
 
-kubectl apply -f kpack/k8s-deployment.yaml
+kubectl apply -f kpack/manifests/k8s-image-deployment.yaml
+#kubectl apply -f kpack/manifests/k8s-image-native-deployment.yaml
 
 kubectl get pods
 
 kubectl port-forward svc/my-spring-app-service 8080:80
-kubectl port-forward svc/my-spring-app-service2 8080:80
-kubectl port-forward svc/my-spring-app-service3 8080:80
+#kubectl port-forward svc/my-spring-app-native-service 8080:80
 
 # Update Source
 
 You could change main branch repo source code to launch another build
 
 kubectl rollout restart deployment my-spring-app
-kubectl rollout restart deployment my-spring-app2
+#kubectl rollout restart deployment my-spring-app-native
+
+# Create image source (optional)
+
+docker build -t yoanyo/hello-world-src .
+docker push yoanyo/hello-world-src
+
+kubectl apply -f kpack/manifests/k8s-image-source-deployment.yaml
+
+kubectl port-forward svc/my-spring-app-source-service 8080:80
 
 If you push another source code image to registry nothing happends (install kp cli)
 
-kp image tutorial-image3 trigger
+kp image tutorial-image-source trigger
 
-kubectl rollout restart deployment my-spring-app3
+kubectl rollout restart deployment my-spring-app-source
 
 # Update JDK or TOMCAT
 
