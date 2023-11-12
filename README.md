@@ -10,7 +10,8 @@ kubectl taint nodes --all node-role.kubernetes.io/control-plane-
 
 # Deploy Kpack
 
-kubectl apply -f kpack/install/release-0.7.5.yaml
+kubectl apply -f kpack/install/release-0.9.5.yaml
+#kubectl apply -f kpack/install/release-0.7.5.yaml (too old)
 #kubectl apply -f kpack/install/release-0.12.2.yaml (Need K8s 1.25+)
 
 # Deploy Secret
@@ -37,6 +38,10 @@ You can check lifecycle phases log
 
 kubectl logs tutorial-image-build-1-build-pod -c detect
 kubectl logs tutorial-image-build-1-build-pod -c build
+
+Even go inside build container
+
+kubectl exec -it tutorial-image-build-1-build-pod -c build sh
 
 Or using kp cli
 

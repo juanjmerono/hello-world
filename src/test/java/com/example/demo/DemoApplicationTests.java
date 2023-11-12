@@ -16,7 +16,7 @@ class DemoApplicationTests {
 
 	@Test
 	void fail() throws InterruptedException {
-		TimeUnit.MINUTES.sleep(5);
+		TimeUnit.MINUTES.sleep(3);
 		assertTrue(true);
 	}
 

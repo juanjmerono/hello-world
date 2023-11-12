@@ -1,12 +1,33 @@
 apiVersion: v1
 kind: Secret
 metadata:
+  name: tutorial-settings
+type: service.binding/maven
+stringData:
+  type: maven
+  provider: sample
+  settings.xml: |
+    <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
+        <profiles>
+            <profile>
+                <id>profile-test</id>
+                <properties>
+                    <tomcat.version>9.0.80</tomcat.version>
+                </properties>
+            </profile>
+        </profiles>
+    </settings>
+---
+apiVersion: v1
+kind: Secret
+metadata:
   name: tutorial-certificates
 type: service.binding/ca-certificates
 stringData:
   type: ca-certificates
-  #provider: sample
-  metasupercom.pem: |
+  provider: sample
+  metasupercom.crt: |
     -----BEGIN CERTIFICATE-----
     MIIDrDCCAzGgAwIBAgISA1PDZBSv8vrkUtJJWxWXH6upMAoGCCqGSM49BAMDMDIx
     CzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MQswCQYDVQQDEwJF
@@ -39,6 +60,7 @@ metadata:
 secrets:
 - name: tutorial-registry-credentials
 - name: tutorial-certificates
+- name: tutorial-settings
 imagePullSecrets:
 - name: tutorial-registry-credentials
 ---
@@ -109,6 +131,9 @@ spec:
       - name: BP_JVM_VERSION
         value: "11"      
     sevices:
+      - name: tutorial-settings
+        kind: Secret
+        apiVersion: v1
       - name: tutorial-certificates
         kind: Secret
         apiVersion: v1
