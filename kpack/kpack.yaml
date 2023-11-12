@@ -58,11 +58,11 @@ metadata:
   name: tutorial-service-account
   namespace: default
 secrets:
-- name: tutorial-registry-credentials
-- name: tutorial-certificates
-- name: tutorial-settings
+  - name: tutorial-registry-credentials
+  - name: tutorial-certificates
+  - name: tutorial-settings
 imagePullSecrets:
-- name: tutorial-registry-credentials
+  - name: tutorial-registry-credentials
 ---
 # Cluster Store
 apiVersion: kpack.io/v1alpha2
@@ -81,9 +81,9 @@ metadata:
 spec:
   id: "io.buildpacks.stacks.jammy"
   buildImage:
-    image: "paketobuildpacks/build-jammy-base:latest"
+    image: "paketobuildpacks/build-jammy-base"
   runImage:
-    image: "paketobuildpacks/run-jammy-base:latest"
+    image: "paketobuildpacks/run-jammy-base"
   # Download images from a private repo
   # serviceAccountRef:
   #   name: private
@@ -130,13 +130,13 @@ spec:
         value: --batch-mode -Dtomcat.version=9.0.82 --no-transfer-progress package
       - name: BP_JVM_VERSION
         value: "11"      
-    sevices:
-      - name: tutorial-settings
-        kind: Secret
-        apiVersion: v1
-      - name: tutorial-certificates
-        kind: Secret
-        apiVersion: v1
+    # services:
+    #   - name: tutorial-certificates
+    #     kind: Secret
+    #     apiVersion: v1
+    #   - name: tutorial-settings
+    #     kind: Secret
+    #     apiVersion: v1
 # ---
 # # Image
 # apiVersion: kpack.io/v1alpha2
