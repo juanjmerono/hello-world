@@ -21,6 +21,14 @@ kubectl create secret docker-registry tutorial-registry-credentials \
     --docker-server=https://index.docker.io/v1/ \
     --namespace default
 
+# Create custom buildpacks (optional)
+
+docker build . -t yoanyo/buildpack-java:11 -f kpack/buildpacks/Dockerfile-java
+docker push yoanyo/buildpack-java:11
+
+docker build . -t yoanyo/buildpack-maven:9.0.80 -f kpack/buildpacks/Dockerfile-maven
+docker push yoanyo/buildpack-maven:9.0.80
+
 # Deploy KPack files
 
 kubectl apply -f kpack/kpack.yaml
@@ -70,6 +78,14 @@ If you push another source code image to registry nothing happends (install kp c
 kp image tutorial-image3 trigger
 
 kubectl rollout restart deployment my-spring-app3
+
+# Update JDK or TOMCAT
+
+Change env variables in image manifesto (only to change major version)
+
+# Rebase RUN image
+
+Change stack run image
 
 # Shutdown
 

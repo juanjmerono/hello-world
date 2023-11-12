@@ -49,7 +49,17 @@ metadata:
   name: store-java
 spec:
   sources:
-  - image: gcr.io/paketo-buildpacks/java
+  #- image: gcr.io/paketo-buildpacks/java
+  - image: gcr.io/paketo-buildpacks/ca-certificates
+  - image: gcr.io/paketo-buildpacks/dist-zip
+  - image: gcr.io/paketo-buildpacks/syft
+  - image: gcr.io/paketo-buildpacks/apache-tomcat
+  - image: gcr.io/paketo-buildpacks/apache-tomee
+  - image: gcr.io/paketo-buildpacks/liberty
+  - image: gcr.io/paketo-buildpacks/spring-boot
+  - image: gcr.io/paketo-buildpacks/executable-jar
+  - image: yoanyo/buildpack-java:11
+  - image: yoanyo/buildpack-maven:9.0.80
 ---
 # Cluster Stack
 apiVersion: kpack.io/v1alpha2
@@ -59,9 +69,9 @@ metadata:
 spec:
   id: "io.buildpacks.stacks.jammy"
   buildImage:
-    image: "paketobuildpacks/build-jammy-base:0.1.80"
+    image: "paketobuildpacks/build-jammy-base:latest"
   runImage:
-    image: "paketobuildpacks/run-jammy-base:0.1.80"
+    image: "paketobuildpacks/run-jammy-base:latest"
   # Download images from a private repo
   # serviceAccountRef:
   #   name: private
@@ -84,7 +94,29 @@ spec:
     kind: ClusterStore
   order:
   - group:
-    - id: paketo-buildpacks/java
+    - id: paketo-buildpacks/ca-certificates
+      optional: true
+    - id: paketo-buildpacks/syft
+      optional: true
+    - id: paketo-buildpacks/executable-jar
+      optional: true
+    - id: paketo-buildpacks/apache-tomcat
+      optional: true
+    - id: paketo-buildpacks/apache-tomee
+      optional: true
+    - id: paketo-buildpacks/liberty
+      optional: true
+    - id: paketo-buildpacks/dist-zip
+      optional: true
+    - id: paketo-buildpacks/spring-boot
+      optional: true
+    - id: paketo-buildpacks/maven
+      optional: true  
+    - id: paketo-buildpacks/bellsoft-liberica
+      optional: true  
+  #- group:
+    #- id: paketo-buildpacks/java
+    #- id: sd
 ---
 # Image
 apiVersion: kpack.io/v1alpha2
@@ -102,14 +134,6 @@ spec:
     git:
       url: https://github.com/juanjmerono/hello-world
       revision: main
-  build:
-    env:
-      - name: SERVICE_BINDING_ROOT
-        value: /platform/bindings/ca-certificates
-      #- name: BP_MAVEN_BUILD_ARGUMENTS
-      #  value: --batch-mode -Dtomcat.version=9.0.82 --no-transfer-progress package
-      - name: BP_JVM_VERSION
-        value: "11"
 # ---
 # # Image
 # apiVersion: kpack.io/v1alpha2
@@ -128,11 +152,6 @@ spec:
 #       url: https://github.com/juanjmerono/hello-world
 #       revision: main
 #   build:
-#     env:
-#       - name: BP_MAVEN_BUILD_ARGUMENTS
-#         value: --batch-mode -Dtomcat.version=9.0.82 --no-transfer-progress package
-#       - name: BP_JVM_VERSION
-#         value: "11"
 #     # Connecting service bindings
 #     sevices:
 #       - name: tutorial-certificates
@@ -154,9 +173,3 @@ spec:
 #   source:
 #     registry:
 #       image: yoanyo/hello-world-src:latest
-#   build:
-#     env:
-#       - name: BP_MAVEN_BUILD_ARGUMENTS
-#         value: --batch-mode -Dtomcat.version=9.0.82 --no-transfer-progress package
-#       - name: BP_JVM_VERSION
-#         value: "11"

@@ -1,0 +1,3 @@
+FROM gcr.io/paketo-buildpacks/bellsoft-liberica
+
+ENV BP_JVM_VERSION="11"

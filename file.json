@@ -1,0 +1,332 @@
+{
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+        "annotations": {
+            "container.seccomp.security.alpha.kubernetes.io/completion": "runtime/default",
+            "container.seccomp.security.alpha.kubernetes.io/rebase": "runtime/default",
+            "image.kpack.io/buildChanges": "[{\"reason\":\"STACK\",\"old\":\"sha256:09e2994c01af50cc48d6f55f08f0977a91d245f8483f6e41e8552cc41e5e5981\",\"new\":\"sha256:66f3b595f00178801cae15f5f14491d0dfeb18d0202fab7b84fa1d8927a97406\"}]",
+            "image.kpack.io/builderKind": "",
+            "image.kpack.io/builderName": "java-builder",
+            "image.kpack.io/reason": "STACK",
+            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"kpack.io/v1alpha2\",\"kind\":\"Image\",\"metadata\":{\"annotations\":{},\"name\":\"tutorial-image\",\"namespace\":\"default\"},\"spec\":{\"builder\":{\"kind\":\"Builder\",\"name\":\"java-builder\"},\"serviceAccountName\":\"tutorial-service-account\",\"source\":{\"git\":{\"revision\":\"main\",\"url\":\"https://github.com/juanjmerono/hello-world\"}},\"tag\":\"yoanyo/hello-world\"}}\n",
+            "seccomp.security.alpha.kubernetes.io/pod": "runtime/default",
+            "sidecar.istio.io/inject": "false"
+        },
+        "creationTimestamp": "2023-11-12T09:39:32Z",
+        "labels": {
+            "image.kpack.io/buildNumber": "6",
+            "image.kpack.io/image": "tutorial-image",
+            "image.kpack.io/imageGeneration": "4",
+            "kpack.io/build": "tutorial-image-build-6"
+        },
+        "name": "tutorial-image-build-6-build-pod",
+        "namespace": "default",
+        "ownerReferences": [
+            {
+                "apiVersion": "kpack.io/v1alpha2",
+                "blockOwnerDeletion": true,
+                "controller": true,
+                "kind": "Build",
+                "name": "tutorial-image-build-6",
+                "uid": "53fd990e-ee44-4919-97b1-164ace158cf5"
+            }
+        ],
+        "resourceVersion": "10302",
+        "uid": "67821349-d5c5-411d-8c9f-6be08de3d65d"
+    },
+    "spec": {
+        "containers": [
+            {
+                "args": [
+                    "-dockerconfig=tutorial-registry-credentials",
+                    "-cosign-annotations=buildTimestamp=20231112.093931",
+                    "-cosign-annotations=buildNumber=6"
+                ],
+                "command": [
+                    "/cnb/process/completion"
+                ],
+                "env": [
+                    {
+                        "name": "CACHE_TAG"
+                    },
+                    {
+                        "name": "TERMINATION_MESSAGE_PATH",
+                        "value": "/tmp/termination-log"
+                    }
+                ],
+                "image": "gcr.io/cf-build-service-public/kpack/completion@sha256:78f3792f2c6b71f2e29e8abfb0fad01447449c5baf77e7938564f4eff485a4e3",
+                "imagePullPolicy": "IfNotPresent",
+                "name": "completion",
+                "resources": {},
+                "securityContext": {
+                    "allowPrivilegeEscalation": false,
+                    "capabilities": {
+                        "drop": [
+                            "ALL"
+                        ]
+                    },
+                    "privileged": false,
+                    "runAsNonRoot": true,
+                    "seccompProfile": {
+                        "type": "RuntimeDefault"
+                    }
+                },
+                "terminationMessagePath": "/tmp/termination-log",
+                "terminationMessagePolicy": "FallbackToLogsOnError",
+                "volumeMounts": [
+                    {
+                        "mountPath": "/var/report",
+                        "name": "report-dir"
+                    },
+                    {
+                        "mountPath": "/var/notary/v1",
+                        "name": "notary-dir",
+                        "readOnly": true
+                    },
+                    {
+                        "mountPath": "/var/build-secrets/tutorial-registry-credentials",
+                        "name": "secret-volume-0"
+                    },
+                    {
+                        "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                        "name": "kube-api-access-7mmlt",
+                        "readOnly": true
+                    }
+                ]
+            }
+        ],
+        "dnsPolicy": "ClusterFirst",
+        "enableServiceLinks": true,
+        "imagePullSecrets": [
+            {
+                "name": "tutorial-registry-credentials"
+            }
+        ],
+        "initContainers": [
+            {
+                "args": [
+                    "--run-image",
+                    "index.docker.io/yoanyo/buildpack-runimage-java11@sha256:66f3b595f00178801cae15f5f14491d0dfeb18d0202fab7b84fa1d8927a97406",
+                    "--last-built-image",
+                    "index.docker.io/yoanyo/hello-world@sha256:e26e0bf118e0f962c1cd654a10d10b7ed84bb54554645932181c3326951cfca8",
+                    "--report",
+                    "/var/report/report.toml",
+                    "-dockerconfig=tutorial-registry-credentials",
+                    "yoanyo/hello-world",
+                    "index.docker.io/yoanyo/hello-world:b6.20231112.093931"
+                ],
+                "env": [
+                    {
+                        "name": "BUILD_CHANGES",
+                        "value": "[{\"reason\":\"STACK\",\"old\":\"sha256:09e2994c01af50cc48d6f55f08f0977a91d245f8483f6e41e8552cc41e5e5981\",\"new\":\"sha256:66f3b595f00178801cae15f5f14491d0dfeb18d0202fab7b84fa1d8927a97406\"}]"
+                    }
+                ],
+                "image": "gcr.io/cf-build-service-public/kpack/rebase@sha256:25f5ba4a68b9aa25a775ac5f487f9e32b15d3284797013b7a32140a9aee93429",
+                "imagePullPolicy": "IfNotPresent",
+                "name": "rebase",
+                "resources": {},
+                "securityContext": {
+                    "allowPrivilegeEscalation": false,
+                    "capabilities": {
+                        "drop": [
+                            "ALL"
+                        ]
+                    },
+                    "privileged": false,
+                    "runAsNonRoot": true,
+                    "seccompProfile": {
+                        "type": "RuntimeDefault"
+                    }
+                },
+                "terminationMessagePath": "/dev/termination-log",
+                "terminationMessagePolicy": "File",
+                "volumeMounts": [
+                    {
+                        "mountPath": "/var/build-secrets/tutorial-registry-credentials",
+                        "name": "secret-volume-0"
+                    },
+                    {
+                        "mountPath": "/var/report",
+                        "name": "report-dir"
+                    },
+                    {
+                        "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                        "name": "kube-api-access-7mmlt",
+                        "readOnly": true
+                    }
+                ],
+                "workingDir": "/workspace"
+            }
+        ],
+        "nodeName": "kpack-control-plane",
+        "nodeSelector": {
+            "kubernetes.io/os": "linux"
+        },
+        "preemptionPolicy": "PreemptLowerPriority",
+        "priority": 0,
+        "restartPolicy": "Never",
+        "schedulerName": "default-scheduler",
+        "securityContext": {
+            "runAsNonRoot": true,
+            "seccompProfile": {
+                "type": "RuntimeDefault"
+            }
+        },
+        "serviceAccount": "tutorial-service-account",
+        "serviceAccountName": "tutorial-service-account",
+        "terminationGracePeriodSeconds": 30,
+        "tolerations": [
+            {
+                "effect": "NoExecute",
+                "key": "node.kubernetes.io/not-ready",
+                "operator": "Exists",
+                "tolerationSeconds": 300
+            },
+            {
+                "effect": "NoExecute",
+                "key": "node.kubernetes.io/unreachable",
+                "operator": "Exists",
+                "tolerationSeconds": 300
+            }
+        ],
+        "volumes": [
+            {
+                "name": "secret-volume-0",
+                "secret": {
+                    "defaultMode": 420,
+                    "secretName": "tutorial-registry-credentials"
+                }
+            },
+            {
+                "emptyDir": {},
+                "name": "report-dir"
+            },
+            {
+                "emptyDir": {},
+                "name": "notary-dir"
+            },
+            {
+                "name": "kube-api-access-7mmlt",
+                "projected": {
+                    "defaultMode": 420,
+                    "sources": [
+                        {
+                            "serviceAccountToken": {
+                                "expirationSeconds": 3607,
+                                "path": "token"
+                            }
+                        },
+                        {
+                            "configMap": {
+                                "items": [
+                                    {
+                                        "key": "ca.crt",
+                                        "path": "ca.crt"
+                                    }
+                                ],
+                                "name": "kube-root-ca.crt"
+                            }
+                        },
+                        {
+                            "downwardAPI": {
+                                "items": [
+                                    {
+                                        "fieldRef": {
+                                            "apiVersion": "v1",
+                                            "fieldPath": "metadata.namespace"
+                                        },
+                                        "path": "namespace"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "status": {
+        "conditions": [
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2023-11-12T09:39:47Z",
+                "reason": "PodCompleted",
+                "status": "True",
+                "type": "Initialized"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2023-11-12T09:39:49Z",
+                "reason": "PodCompleted",
+                "status": "False",
+                "type": "Ready"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2023-11-12T09:39:49Z",
+                "reason": "PodCompleted",
+                "status": "False",
+                "type": "ContainersReady"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2023-11-12T09:39:32Z",
+                "status": "True",
+                "type": "PodScheduled"
+            }
+        ],
+        "containerStatuses": [
+            {
+                "containerID": "containerd://27c810563f78d650199138cc3fef86579913873cf1d5905873d21585c6df93f4",
+                "image": "sha256:02a794d719708059254f0a73d7d8bee01b8ea72805e52e17607d517a6866d263",
+                "imageID": "gcr.io/cf-build-service-public/kpack/completion@sha256:78f3792f2c6b71f2e29e8abfb0fad01447449c5baf77e7938564f4eff485a4e3",
+                "lastState": {},
+                "name": "completion",
+                "ready": false,
+                "restartCount": 0,
+                "started": false,
+                "state": {
+                    "terminated": {
+                        "containerID": "containerd://27c810563f78d650199138cc3fef86579913873cf1d5905873d21585c6df93f4",
+                        "exitCode": 0,
+                        "finishedAt": "2023-11-12T09:39:49Z",
+                        "message": "H4sIAAAAAAAA/6SUQY+bPBCG/4vPwdhgY+D0SV8ve+il16qHsT1evAGMsLPddJX/XiVRtkuqpRW9jszzvJ5h/Er0wfd2ArP/jAksJCDt11fiLWnJBHtMIXs7EXMDmcE5eecNJIxkR55xjj6MpCUlrWhFdqQLA07wiKQlXUpTbPP80afuoKkJQ/5n5mn3oV5j38fgUtZ7jbM3sAjAGRW02JDgd+xKhnh0aamlZUPZBu2FtGIa4BnHhaqiXFLON7iurBUZvqA5JNA9Zk8w31nrTW29Q67IYQLTYZbCYGDZXEV5SbncYF8y/0qOeDdYRet/MiOuiS9/WzreLVFNmw3OG2tFZ31M2Q8/LXySVlRt8L3B1jZlmv34mOkQ0p2zUHTLSN8DT992pD+/F+n/c7cfhiuH3Kq3gh8tvlAbzB5n6kN+DDAeQ95h34fse5h7+1/soJBVK6RooEC0StcNIGAl6lIIxZUpsQGpgTsrwBVMOg4ojSyFBlOVJZSsUI7sSExg9g+fztpAfwWnl3qkTzAMx9uxL4fxo4zXm7+7+HwYs8vHmYaIt8BV5UotG+kY46quGTeAXDrpuBANt8w61Ly2rGCFA610LRxwWzeFgkYJVpHTTwAAAP//AQAA/////HPZ/gUAAA==",
+                        "reason": "Completed",
+                        "startedAt": "2023-11-12T09:39:48Z"
+                    }
+                }
+            }
+        ],
+        "hostIP": "172.19.0.2",
+        "initContainerStatuses": [
+            {
+                "containerID": "containerd://381252ef7654b15b3fe8a9532a40ee61c1210eed296ae50790da792c84a466b4",
+                "image": "sha256:df27603fee35999244665136449a5ba773d9930d9a6af9c45a4440a169209158",
+                "imageID": "gcr.io/cf-build-service-public/kpack/rebase@sha256:25f5ba4a68b9aa25a775ac5f487f9e32b15d3284797013b7a32140a9aee93429",
+                "lastState": {},
+                "name": "rebase",
+                "ready": true,
+                "restartCount": 0,
+                "state": {
+                    "terminated": {
+                        "containerID": "containerd://381252ef7654b15b3fe8a9532a40ee61c1210eed296ae50790da792c84a466b4",
+                        "exitCode": 0,
+                        "finishedAt": "2023-11-12T09:39:47Z",
+                        "reason": "Completed",
+                        "startedAt": "2023-11-12T09:39:39Z"
+                    }
+                }
+            }
+        ],
+        "phase": "Succeeded",
+        "podIP": "10.244.0.14",
+        "podIPs": [
+            {
+                "ip": "10.244.0.14"
+            }
+        ],
+        "qosClass": "BestEffort",
+        "startTime": "2023-11-12T09:39:32Z"
+    }
+}
