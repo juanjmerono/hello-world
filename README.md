@@ -38,6 +38,11 @@ You can check lifecycle phases log
 kubectl logs tutorial-image-build-1-build-pod -c detect
 kubectl logs tutorial-image-build-1-build-pod -c build
 
+Or using kp cli
+
+kp build logs tutorial-image -b 1
+kp image status tutorial-image
+
 # Inspect generated image
 
 Install pack cli
