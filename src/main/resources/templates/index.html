@@ -22,6 +22,10 @@
     <dl id="javadata"></dl>
 </div>
 <div>
+    <p>CaCerts</p>
+    <dl id="cacerts"></dl>
+</div>
+<div>
     <p>OS Info</p>
     <dl id="osdata"></dl>
 </div>
@@ -49,6 +53,16 @@
         .then(function(data) {
             //console.log(data);
             document.getElementById('hour').innerHTML = data.hour;
+        })
+        .catch(function(error) {
+            console.log(error);
+        });
+
+    fetch('/cacerts')
+        .then((resp) => resp.json())
+        .then(function(data) {
+            //console.log(data);
+            document.getElementById('cacerts').innerHTML = data;
         })
         .catch(function(error) {
             console.log(error);

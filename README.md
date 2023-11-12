@@ -31,6 +31,22 @@ kubectl get clusterstores
 kubectl get builders
 kubectl get builds
 kubectl get images
+kubectl get pods
+
+You can check lifecycle phases log
+
+kubectl logs tutorial-image-build-1-build-pod -c detect
+kubectl logs tutorial-image-build-1-build-pod -c build
+
+# Inspect generated image
+
+Install pack cli
+
+Check Software Bill of Materials
+
+pack sbom download yoanyo/hello-world -o target --remote
+
+Inside targe/layers you can inspect details of jvm and all libs and vesions included in java app.
 
 # Deploy Service
 
@@ -49,7 +65,7 @@ You could change main branch repo source code to launch another build
 kubectl rollout restart deployment my-spring-app
 kubectl rollout restart deployment my-spring-app2
 
-If you push another source code image to registry nothing happends
+If you push another source code image to registry nothing happends (install kp cli)
 
 kp image tutorial-image3 trigger
 
