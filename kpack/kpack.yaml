@@ -146,7 +146,7 @@ spec:
     kind: ClusterStore
   order:
   - group:
-    - id: paketo-buildpacks/java
+    - id: paketo-buildpacks/java-native-image
 ---
 # Image
 apiVersion: kpack.io/v1alpha2
@@ -169,7 +169,7 @@ spec:
       - name: BP_MAVEN_BUILD_ARGUMENTS
         value: --batch-mode -Dtomcat.version=9.0.82 --no-transfer-progress package
       - name: BP_JVM_VERSION
-        value: "11"      
+        value: "17"      
     # services:
     #   - name: tutorial-certificates
     #     kind: Secret
@@ -199,7 +199,9 @@ spec:
       - name: BP_MAVEN_BUILD_ARGUMENTS
         value: --batch-mode -Dtomcat.version=9.0.82 --no-transfer-progress package
       - name: BP_JVM_VERSION
-        value: "11"      
+        value: "17"
+      - name: BP_NATIVE_IMAGE
+        value: "true"
 # ---
 # # Image
 # apiVersion: kpack.io/v1alpha2
@@ -219,7 +221,7 @@ spec:
 #       revision: main
 #   build:
 #     # Connecting service bindings
-#     sevices:
+#     services:
 #       - name: tutorial-certificates
 #         kind: Secret
 #         apiVersion: v1
