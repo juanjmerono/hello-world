@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.9</version>
+		<version>3.1.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
@@ -14,7 +14,7 @@
 	<name>demo</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -44,21 +44,25 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.graalvm.buildtools</groupId>
+				<artifactId>native-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
 					<image>
-						<name>yoanyo/hello-world:latest</name>
-						<builder>paketobuildpacks/builder-jammy-base:latest</builder>
+						<name>yoanyo/hello-world-native:latest</name>
+						<builder>paketobuildpacks/builder-jammy-tiny:latest</builder>
 						<bindings>
 							<binding>${basedir}/bindings/ca-certificates:/platform/bindings/ca-certificates</binding>
 						</bindings>
 						<env>
 							<BP_JVM_VERSION>${java.version}</BP_JVM_VERSION>
 							<BP_EMBED_CERTS>true</BP_EMBED_CERTS>
+							<BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
 						</env>						
 					</image>
-					<executable>true</executable>
 				</configuration>
 				<executions>
 					<execution>
