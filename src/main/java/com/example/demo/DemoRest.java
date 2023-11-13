@@ -26,4 +26,13 @@ public class DemoRest {
         return new ResponseEntity<>(result,HttpStatus.OK);         
     }
 
+    @GetMapping("/memory-status")
+    public Map<String,Long> getMemoryStatistics() {
+        Map<String,Long> stats = new HashMap<>();
+        stats.put("HeapSize",Runtime.getRuntime().totalMemory());
+        stats.put("HeapMaxSize",Runtime.getRuntime().maxMemory());
+        stats.put("HeapFreeSize",Runtime.getRuntime().freeMemory());
+        return stats;
+    }
+
 }

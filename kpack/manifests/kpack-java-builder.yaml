@@ -15,9 +15,9 @@ metadata:
 spec:
   id: "io.buildpacks.stacks.jammy"
   buildImage:
-    image: "paketobuildpacks/build-jammy-base"
+    image: "paketobuildpacks/build-jammy-base:latest"
   runImage:
-    image: "paketobuildpacks/run-jammy-base"
+    image: "paketobuildpacks/run-jammy-base:latest"
   # Download images from a private repo
   # serviceAccountRef:
   #   name: private

@@ -18,8 +18,6 @@ spec:
   build:
     env:
       - name: BP_MAVEN_BUILD_ARGUMENTS
-        value: --batch-mode -Dtomcat.version=9.0.82 --no-transfer-progress package
-      - name: BP_JVM_VERSION
-        value: "17"
+        value: --batch-mode -Pnative --no-transfer-progress package
       - name: BP_NATIVE_IMAGE
         value: "true"
