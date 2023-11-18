@@ -21,3 +21,5 @@ spec:
         value: --batch-mode -f pom-spring3.xml --no-transfer-progress package -Pnative
       - name: BP_NATIVE_IMAGE
         value: "true"
+      - name: BP_EMBED_CERTS
+        value: "true"

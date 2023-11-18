@@ -20,7 +20,9 @@ spec:
       - name: BP_MAVEN_BUILD_ARGUMENTS
         value: --batch-mode -Dtomcat.version=9.0.82 --no-transfer-progress package
       - name: BP_JVM_VERSION
-        value: "11"      
+        value: "11"
+      - name: BP_EMBED_CERTS
+        value: "true"
     # services:
     #   - name: tutorial-certificates
     #     kind: Secret
