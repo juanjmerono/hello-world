@@ -27,7 +27,7 @@
 </div>
 <div>
     <p>CaCerts</p>
-    <dl id="cacerts"></dl>
+    <ol id="cacerts"></ol>
 </div>
 <div>
     <p>OS Info</p>
@@ -76,7 +76,12 @@
         .then((resp) => resp.json())
         .then(function(data) {
             //console.log(data);
-            document.getElementById('cacerts').innerHTML = data;
+            data.forEach(c => {
+                let child = document.createElement('li');
+                child.appendChild(document.createTextNode(`[${c.subjectDN}][${c.issuerDN}]`));
+                document.getElementById('cacerts').appendChild(child);
+            });
+            //document.getElementById('cacerts').innerHTML = data;
         })
         .catch(function(error) {
             console.log(error);
