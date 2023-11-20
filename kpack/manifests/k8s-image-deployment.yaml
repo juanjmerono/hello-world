@@ -25,19 +25,19 @@ spec:
               value: "prod"
             - name: SERVICE_BINDING_ROOT
               value: "/mnt/platform/bindings"
-          volumes:
-            - name: ca-certs
-              secret:
-                secretName: tutorial-certificates
-                items:
-                - key: "superuser.crt"
-                  path: "superuser.crt"
-                - key: "type"
-                  path: "type"
           volumeMounts:
             - name: ca-certs
               mountPath: /mnt/platform/bindings/ca-certificates
               readOnly: true
+      volumes:
+        - name: ca-certs
+          secret:
+            secretName: tutorial-certificates
+            items:
+            - key: "superusercom.crt"
+              path: "superusercom.crt"
+            - key: "type"
+              path: "type"
 ---
 apiVersion: v1
 kind: Service

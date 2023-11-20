@@ -20,6 +20,7 @@ public class DemoCaCerts {
     private KeyStore loadKeyStore() throws Exception {
         String relativeCacertsPath = "/lib/security/cacerts".replace("/", File.separator);
         String filename = System.getProperty("java.home") + relativeCacertsPath;
+        System.err.println("***************: "+filename);
         FileInputStream is = new FileInputStream(filename);
 
         KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
@@ -33,7 +34,9 @@ public class DemoCaCerts {
     public List<CertificateDTO> cacerts() {
         try {
             KeyStore ks = loadKeyStore();
-            return Collections.list(ks.aliases()).stream().map(c -> {
+            List<String> aliasList = Collections.list(ks.aliases());
+            System.err.println("***************: "+aliasList.size());
+            return aliasList.stream().map(c -> {
                 X509Certificate crt = gCertificate(ks,c);
                 return new CertificateDTO(crt.getSubjectDN().getName(), crt.getIssuerDN().getName());
             }).filter(c -> c.getSubjectDN().equals("CN=superuser.com")).collect(Collectors.toList());
