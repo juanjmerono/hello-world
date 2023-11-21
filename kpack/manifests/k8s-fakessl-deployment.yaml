@@ -30,13 +30,13 @@ spec:
       volumes:
         - name: nginx-conf
           secret:
-            secretName: tutorial-nginx-conf
+            secretName: tutorial-nginx-config
             items:
             - key: "nginx.conf"
               path: "nginx.conf"
         - name: nginx-certs
           secret:
-            secretName: tutorial-nginx-conf
+            secretName: tutorial-nginx-config
             items:
             - key: "public.crt"
               path: "public.crt"
@@ -46,7 +46,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: fake.ssl
+  name: fake-ssl
 spec:
   selector:
     app: fake-ssl

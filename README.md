@@ -69,11 +69,13 @@ Inside targe/layers you can inspect details of jvm and all libs and vesions incl
 
 # Deploy Service
 
+kubectl apply -f kpack/manifests/k8s-fakessl-deployment.yaml
 kubectl apply -f kpack/manifests/k8s-image-deployment.yaml
 #kubectl apply -f kpack/manifests/k8s-image-native-deployment.yaml
 
 kubectl get pods
 
+kubectl port-forward svc/fake-ssl 8443:443
 kubectl port-forward svc/my-spring-app-service 8080:80
 #kubectl port-forward svc/my-spring-app-native-service 8080:80
 

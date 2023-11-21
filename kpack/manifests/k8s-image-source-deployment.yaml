@@ -23,6 +23,21 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "prod"
+            - name: SERVICE_BINDING_ROOT
+              value: "/mnt/platform/bindings"
+          volumeMounts:
+            - name: ca-certs
+              mountPath: /mnt/platform/bindings/ca-certificates
+              readOnly: true
+      volumes:
+        - name: ca-certs
+          secret:
+            secretName: tutorial-certificates
+            items:
+            - key: "public.crt"
+              path: "public.crt"
+            - key: "type"
+              path: "type"
 ---
 apiVersion: v1
 kind: Service

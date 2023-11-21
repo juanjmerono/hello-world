@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class DemoCaCerts {
     
     @GetMapping("/testcrt")
-    public String testCrt(@RequestParam(name="host",defaultValue = "fake.ssl") String host) throws Exception {
+    public String testCrt(@RequestParam(name="host",defaultValue = "fake-ssl") String host) throws Exception {
         URL url = new URL("https://"+host);
         HttpsURLConnection con = (HttpsURLConnection)url.openConnection();
         con.setRequestMethod("GET");
