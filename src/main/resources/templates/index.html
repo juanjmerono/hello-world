@@ -27,7 +27,7 @@
 </div>
 <div>
     <p>CaCerts</p>
-    <ol id="cacerts"></ol>
+    <a href="/testcrt">Click to load page with self signed certificate</a>
 </div>
 <div>
     <p>OS Info</p>
@@ -67,21 +67,6 @@
         .then(function(data) {
             //console.log(data);
             document.getElementById('memorystatus').innerHTML = JSON.stringify(data, null, 4);
-        })
-        .catch(function(error) {
-            console.log(error);
-        });
-
-    fetch('/cacerts')
-        .then((resp) => resp.json())
-        .then(function(data) {
-            //console.log(data);
-            data.forEach(c => {
-                let child = document.createElement('li');
-                child.appendChild(document.createTextNode(`[${c.subjectDN}][${c.issuerDN}]`));
-                document.getElementById('cacerts').appendChild(child);
-            });
-            //document.getElementById('cacerts').innerHTML = data;
         })
         .catch(function(error) {
             console.log(error);

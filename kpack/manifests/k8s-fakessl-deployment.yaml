@@ -1,0 +1,57 @@
+#
+# Regular java image from source code
+#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fake-ssl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fake-ssl
+  template:
+    metadata:
+      labels:
+        app: fake-ssl
+    spec:
+      containers:
+        - name: fake-ssl
+          image: nginx
+          ports:
+            - containerPort: 443
+          volumeMounts:
+            - name: nginx-conf
+              mountPath: /etc/nginx/
+              readOnly: true
+            - name: nginx-certs
+              mountPath: /etc/nginx/ssl/
+              readOnly: true
+      volumes:
+        - name: nginx-conf
+          secret:
+            secretName: tutorial-nginx-conf
+            items:
+            - key: "nginx.conf"
+              path: "nginx.conf"
+        - name: nginx-certs
+          secret:
+            secretName: tutorial-nginx-conf
+            items:
+            - key: "public.crt"
+              path: "public.crt"
+            - key: "private.key"
+              path: "private.key"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fake.ssl
+spec:
+  selector:
+    app: fake-ssl
+  ports:
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 443

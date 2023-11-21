@@ -1,70 +1,37 @@
 package com.example.demo;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.cert.X509Certificate;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class DemoCaCerts {
     
-
-    private KeyStore loadKeyStore() throws Exception {
-        String relativeCacertsPath = "/lib/security/cacerts".replace("/", File.separator);
-        String filename = System.getProperty("java.home") + relativeCacertsPath;
-        FileInputStream is = new FileInputStream(filename);
-
-        KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
-        String password = "changeit";
-        keystore.load(is, password.toCharArray());
-
-        return keystore;
-    }    
-
-    @GetMapping("/cacerts")
-    public List<CertificateDTO> cacerts() {
-        try {
-            KeyStore ks = loadKeyStore();
-            List<String> aliasList = Collections.list(ks.aliases());
-            return aliasList.stream().map(c -> {
-                X509Certificate crt = gCertificate(ks,c);
-                return new CertificateDTO(crt.getSubjectDN().getName(), crt.getIssuerDN().getName());
-            }).filter(c -> c.getSubjectDN().contains("superuser")).collect(Collectors.toList());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return Arrays.asList();
+    @GetMapping("/testcrt")
+    public String testCrt(@RequestParam(name="host",defaultValue = "fake.ssl") String host) throws Exception {
+        URL url = new URL("https://"+host);
+        HttpsURLConnection con = (HttpsURLConnection)url.openConnection();
+        con.setRequestMethod("GET");
+        String content = "";
+        if (con!=null) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()))) {                
+                String input = "";
+                while ((input = br.readLine()) != null){
+                    content += input;
+                }
+            } catch (IOException e) {
+                content = e.getMessage();
+                e.printStackTrace();
+            }   
         }
-    }
-
-    private X509Certificate gCertificate(KeyStore ks,String c) {
-        try {
-            return (X509Certificate)ks.getCertificate(c);
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-
-    class CertificateDTO {
-        String subjectDN;
-        String issuerDN;
-
-        CertificateDTO(String subjectDN, String issuerDN) {
-            this.subjectDN = subjectDN; this.issuerDN = issuerDN;
-        }
-
-        public String getSubjectDN() { return subjectDN; }
-        public String getIssuerDN() { return issuerDN; }
-
+        return content;
     }
 
 }

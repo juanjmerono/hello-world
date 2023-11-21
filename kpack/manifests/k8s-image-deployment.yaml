@@ -34,8 +34,8 @@ spec:
           secret:
             secretName: tutorial-certificates
             items:
-            - key: "superusercom.crt"
-              path: "superusercom.crt"
+            - key: "public.crt"
+              path: "public.crt"
             - key: "type"
               path: "type"
 ---
