@@ -54,9 +54,10 @@
 					<image>
 						<name>yoanyo/hello-world-native:latest</name>
 						<builder>paketobuildpacks/builder-jammy-tiny:latest</builder>
-						<bindings>
+						<!-- Uncomment to build image with certificate -->
+						<!--bindings>
 							<binding>${basedir}/bindings/ca-certificates:/platform/bindings/ca-certificates</binding>
-						</bindings>
+						</bindings-->
 						<env>
 							<BP_JVM_VERSION>${java.version}</BP_JVM_VERSION>
 							<BP_EMBED_CERTS>true</BP_EMBED_CERTS>
