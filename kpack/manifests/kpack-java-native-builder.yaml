@@ -15,9 +15,9 @@ metadata:
 spec:
   id: "io.buildpacks.stacks.jammy.tiny"
   buildImage:
-    image: "paketobuildpacks/build-jammy-tiny:0.2.5"
+    image: "paketobuildpacks/build-jammy-tiny:0.2.13"
   runImage:
-    image: "paketobuildpacks/run-jammy-tiny:0.2.5"
+    image: "paketobuildpacks/run-jammy-tiny:0.2.13"
 ---
 # Builder
 apiVersion: kpack.io/v1alpha2
