@@ -1,3 +1,44 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: tutorial-certificates-source
+type: service.binding/ca-certificates
+stringData:
+  type: ca-certificates
+  public.crt: |
+    -----BEGIN CERTIFICATE-----
+    MIIFcDCCA1gCCQDE8OTQQlr0sjANBgkqhkiG9w0BAQsFADB6MQswCQYDVQQGEwJY
+    WDESMBAGA1UECAwJU3RhdGVOYW1lMREwDwYDVQQHDAhDaXR5TmFtZTEUMBIGA1UE
+    CgwLQ29tcGFueU5hbWUxGzAZBgNVBAsMEkNvbXBhbnlTZWN0aW9uTmFtZTERMA8G
+    A1UEAwwIZmFrZS1zc2wwHhcNMjMxMTIxMTY0MjAzWhcNMzMxMTE4MTY0MjAzWjB6
+    MQswCQYDVQQGEwJYWDESMBAGA1UECAwJU3RhdGVOYW1lMREwDwYDVQQHDAhDaXR5
+    TmFtZTEUMBIGA1UECgwLQ29tcGFueU5hbWUxGzAZBgNVBAsMEkNvbXBhbnlTZWN0
+    aW9uTmFtZTERMA8GA1UEAwwIZmFrZS1zc2wwggIiMA0GCSqGSIb3DQEBAQUAA4IC
+    DwAwggIKAoICAQDsTnqPWCZeESjHmJvRgYFxVWhEks36qfw/tn3VnMMR72QRBx6E
+    CFZUsbderP4wL2Pp45MXxY9EEjGP4R1d5/FCXi4zMU/yktasJx0YfOxJV+KQdSf8
+    HerlTBg30ielAsj3Z4HtK8fnEyL2IjfmiHs6Z1IsT5X2FOjwFyh6dwk0QEiNELCl
+    1q57j2j4HpU3BHcgCoXOR4ksvtyZz2h0XZh6kALX2Y3Ygi/0YjdyCPBB2tQ5dOAf
+    PFpKDwgKrIytq8D6j+p4LHbJq07pdLnkMgS6VU1a1hmpg21jhV3L2b++Sltzi6TI
+    h3xRCFi9POy6esKVXvn40Jn8Iph+K6tdFuNI9NOi8OAHYi7GBFk+1c4FtlEUa1sl
+    22CqQ3vfoBHX+582S2rkPwHoNBwIdeIiEJ1xqc9KOjQ68bL4AO1Glbfn8DVx7D6O
+    2uHUYPO0Yp3xnaTAk/cYPpiqHilT/XrPX+9aDHu/LcergyZG8hbShok3WZF0Vq0U
+    orbXBrba/id/Tor4rFZbHaxy+kDkX5cZ+r3EWui2XHM2qROISxWOTw8e+7WQOSiy
+    37NqVspTjKESikMZaEDaMH8012XIrwGjK7aLoePiTVjcmPL1Gdk3Iif16N1LrQ8v
+    N9U0bK/QJobzYsw63spHQKVMXvo2pgFK7rrCkPcSQreITQSMwDyI5PxH2QIDAQAB
+    MA0GCSqGSIb3DQEBCwUAA4ICAQBsvt/W6G54BPWdbj1SB+1zILgblcMnX4aohS5f
+    934CsGEulbbcnwmQKApH8hNNJ+XWHq6e9+URLNuHYA2r79H3EOFMvyy/RjtpK5Fv
+    k2kGgseMpbDuaP3nqXVnA4nbb/LtLUOjGhH/XxEcqhGeWsKZz+ck+jReHCj6x3ZR
+    hAxkEatBXYSTcVriVtYKRZsL52RBUTJKnRGfUgcRJk37fvDgSNUQsRuQxuz28GgG
+    lsZaoFgphQXuAvzpI12W0YPLacRX/h6beMYOgGJBkK8iSbLuRUujFSlcwejqy0z9
+    CukxV6pgPdWqHBR+a+KLKwMm0FT4+Yl29+/OBbKF6b+rd7MK8FxNKV+k0EaJ7WK7
+    atepC1yvelXdsAFhSVXneQ11+Kdn7+p9zrBRkTN/+gEF3pG6/kIu7mvrZpr8gIZd
+    7EUEm7GdcRELHwb8ym2l+8jlPa/2whI/Kv5Cun4lMzHA6pA74CG8DTbFn9uJIXYS
+    SHGyjqGmJC7Iw4jysfFcvx3RwFkT/XZkvdngJ5e6lK8dcVpDP0sfuotjCtc9f1fG
+    RToqJIU6XV+nSWvE9oMnJ2FLYOhSz7AMorpHs07D7x6dQMSHaLwqCfJsbQBafy23
+    6ZarZw/JQVXxIponIMKNCR1VNiAVVDT7Q4NOiSwp4Vza21L0SGXY4ryujeAUCKnd
+    fv1r5w==
+    -----END CERTIFICATE-----
+---
 # Regular image from source inside a source image from scratch
 # Image
 apiVersion: kpack.io/v1alpha2
@@ -14,3 +55,15 @@ spec:
   source:
     registry:
       image: yoanyo/hello-world-src:latest
+  build:
+    env:
+      - name: BP_MAVEN_BUILD_ARGUMENTS
+        value: --batch-mode -Dtomcat.version=9.0.82 --no-transfer-progress package
+      - name: BP_JVM_VERSION
+        value: "11"
+      - name: BP_EMBED_CERTS
+        value: "true"
+    services:
+      - name: tutorial-certificates-source
+        kind: Secret
+        apiVersion: v1
