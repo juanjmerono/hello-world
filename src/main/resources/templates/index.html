@@ -62,11 +62,29 @@
             console.log(error);
         });
 
+    function formatBytes(bytes, decimals = 2) {
+        if (!+bytes) return '0 Bytes';
+        const k = 1024;
+        const dm = decimals < 0 ? 0 : decimals;
+        const sizes = ['Bytes', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+    }
+
     fetch('/memory-status')
         .then((resp) => resp.json())
         .then(function(data) {
             //console.log(data);
-            document.getElementById('memorystatus').innerHTML = JSON.stringify(data, null, 4);
+            let heapSize = data['Heap-Size'], freeHeap = data['Heap-FreeSize'];
+            data['Heap-Use'] = heapSize - freeHeap;
+            document.getElementById('memorystatus').innerHTML = "";
+            let ul = document.createElement('ul');
+            Object.keys(data).forEach(key => {
+                let li = document.createElement('li');
+                li.appendChild(document.createTextNode(`[${key}]: ${formatBytes(data[key])}`));
+                ul.appendChild(li);
+            });
+            document.getElementById('memorystatus').appendChild(ul);
         })
         .catch(function(error) {
             console.log(error);
